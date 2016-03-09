@@ -1,0 +1,47 @@
+void func1();
+void func2();
+void func3();
+
+int sqrt(int x, int y);
+
+int takesTwoArrays(int x[24], int y[24]);
+
+int showsArraysofArrays(int x[24], int y[24][15], int z[24][15]);
+
+string upcase(string s);
+
+struct Person {string firstname; string lastname; int age;};
+
+struct ThreePeople {
+  Person p1;
+  Person p2;
+  Person p3;
+};
+
+Person findPerson(ThreePeople tp);
+
+float multiply(float x, float y);
+
+struct StructWithArrays {
+  int aNumber;
+  Person people[10];
+};
+
+struct rectangle {int x; int y;};
+
+
+int area(rectangle r);
+
+void searchRectangles(rectangle rects[200]);
+
+struct MT {};
+
+
+
+
+struct s {
+  int m1[4];
+  int m2[4][10];
+  int m3[4][10][100];
+};
+
