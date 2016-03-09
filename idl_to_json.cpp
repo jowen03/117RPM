@@ -6,7 +6,7 @@
 //
 //        Syntax:
 //
-//               idldeclarationtst idlfile1
+//               idl_to_json idlfile1
 //  
 //        This program reads the file named on the command line
 //        and parses the file into a Declarations parse tree.
