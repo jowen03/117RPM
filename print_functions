@@ -1,0 +1,30 @@
+#!/bin/env ruby
+#
+#                     print all the functions named in supplied IDL file
+#
+
+require 'json'
+
+#
+#     Make sure invoked properly
+#
+
+abort "Usage: #{$PROGRAM_NAME} xxx.idl" if ARGV.length != 1
+
+
+#
+#     Parse declarations into a Ruby hash
+#
+
+decls = JSON.parse(`idl_to_json #{ARGV[0]}`)
+
+abort "Failed to parse IDL file #{ARGV[0]}" if $? != 0
+
+#
+#     Print the function names
+#
+decls["functions"].each do |name, sig|
+  args = sig["arguments"]
+  argstring = args.map{|a| "#{a["type"]} #{a["name"]}"}.join(', ')
+  puts "#{sig["return_type"]} #{name}(#{argstring})"
+end
