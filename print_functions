@@ -16,9 +16,9 @@ abort "Usage: #{$PROGRAM_NAME} xxx.idl" if ARGV.length != 1
 #     Parse declarations into a Ruby hash
 #
 
-decls = JSON.parse(`idl_to_json #{ARGV[0]}`)
-
-abort "Failed to parse IDL file #{ARGV[0]}" if $? != 0
+json_string =`idl_to_json #{ARGV[0]}`
+abort "#{$PROGRAM_NAME}: Failed to parse IDL file #{ARGV[0]}" if $? != 0
+decls =  JSON.parse(json_string)
 
 #
 #     Print the function names
