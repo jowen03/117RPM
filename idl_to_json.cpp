@@ -170,7 +170,7 @@ processIDLFile(const char fileName[]) {
   //
   //  First, you should see whether the type exists by calling: 
   //
-  //      parseTree.typeExists["yourtypename"]
+  //      parseTree.typeExists("yourtypename")
   //
   //  Below, instead, we just iterate through all types
 
@@ -237,7 +237,7 @@ processIDLFile(const char fileName[]) {
   //
   //  First, you should see whether the function exists by calling: 
   //
-  //      parseTree.functionExists["yourfunctionname"]
+  //      parseTree.functionExists("yourfunctionname")
   //
   //  Below, instead, we just iterate through all functions
 
