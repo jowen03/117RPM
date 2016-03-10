@@ -64,7 +64,7 @@ pingstreamserver: pingstreamserver.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 #     Demonstrating remote calls to functions as declared in simplefunctions.idl
 #
 #     The proxies and stubs used here are hand generated, but eventually
-#     your rpcgen program will (should) generate them automatically
+#     your rpcgenerate program will (should) generate them automatically
 #     from any idl
 #
 ########################################################################
@@ -90,7 +90,7 @@ simplefunctionserver: simplefunction.stub.o rpcserver.o rpcstubhelper.o simplefu
 #     as the idl, e.g. the ones with your functions!)
 #
 #     The proxies and stubs used here are hand generated, but eventually
-#     your rpcgen program will (should) generate them automatically
+#     your rpcgenerate program will (should) generate them automatically
 #     from any idl
 #
 #     WARNING! this may cause your rpcgenerate program to attempt to
@@ -106,7 +106,7 @@ simplefunctionserver: simplefunction.stub.o rpcserver.o rpcstubhelper.o simplefu
 #
 #                   idldeclarationtst
 #
-#     When you write rpcgenerator, you'll want to use the idl
+#     When you write rpcgenerate, you'll want to use the idl
 #     parser that's provided for you. This is a demo program
 #     you can read and try to see how the parser works.
 #
