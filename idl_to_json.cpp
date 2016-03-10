@@ -239,7 +239,7 @@ processIDLFile(const char fileName[]) {
   //
   //      parseTree.functionExists["yourfunctionname"]
   //
-  //  Below, instead, we just iterate through all types
+  //  Below, instead, we just iterate through all functions
 
 
   //
