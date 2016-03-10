@@ -1,6 +1,6 @@
 #!/bin/env ruby
 #
-#                     print all the functions named in supplied IDL file
+#          print signatures of all the functions named in supplied IDL file
 #
 
 require 'json'
