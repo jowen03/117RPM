@@ -12,6 +12,14 @@
 //        and parses the file into a Declarations parse tree.
 //        The results are then formatted on standard output as JSON.
 //
+//        Results:
+//
+//        If successful, JSON is written to stdout and exit code is EXIT_SUCCESS(0).
+//
+//        If there are errors, messages are written to stderr and
+//        exit code is EXIT_FAILURE. In most error cases no output is written
+//        to stdout, but that is not guaranteed.
+//
 //        NEEDSWORK:
 //
 //        This test program and the parsing framework were written in some haste.
