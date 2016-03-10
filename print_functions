@@ -21,7 +21,7 @@ abort "#{$PROGRAM_NAME}: Failed to parse IDL file #{ARGV[0]}" if $? != 0
 decls =  JSON.parse(json_string)
 
 #
-#     Print the function names
+#     Print the function signatures
 #
 decls["functions"].each do |name, sig|
 
