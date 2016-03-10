@@ -110,6 +110,12 @@ simplefunctionserver: simplefunction.stub.o rpcserver.o rpcstubhelper.o simplefu
 #     parser that's provided for you. This is a demo program
 #     you can read and try to see how the parser works.
 #
+#     NOTE: This program became more or less obsolete in 2016.
+#     Prior to then, all  RPC generators were written in C++,
+#     there was no idl_to_json program, and this was the main example program
+#     students used to learn the IDL parser. It is still maintained
+#     in case anyone finds it useful.
+#
 ########################################################################
 
 idldeclarationtst: idldeclarationtst.o $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
@@ -117,16 +123,35 @@ idldeclarationtst: idldeclarationtst.o $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 
 ########################################################################
 #
-#                   idldeclarationtst
+#                   idl_to_json
 #
-#     When you write rpcgenerator, you'll want to use the idl
-#     parser that's provided for you. This is a demo program
-#     you can read and try to see how the parser works.
+#     This program servers two purposes:
+#
+#     1) If you are writing your rpc generator in Python or Ruby,
+#        this utility will convert .idl files to JSON for you.
+#     2) Especially if you are writing rpcgenerate in C++, the
+#        source code of idl_to_json.cpp is the best way to learn use
+#        the provided .idl parser.
 #
 ########################################################################
 
 idl_to_json: idl_to_json.o $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 	$(CPP) -o idl_to_json idl_to_json.o $(C150AR) $(C150IDSRPCAR) 
+
+########################################################################
+#
+#          Generate .json files from .idl files
+#
+#     This rule allows you to say:
+#
+#              make demo.json
+#
+#     if you already have demo.idl
+#
+########################################################################
+
+%.json:%.idl idl_to_json
+	     idl_to_json $< > $@
 
 ########################################################################
 #
@@ -144,6 +169,6 @@ idl_to_json: idl_to_json.o $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 
 # clean up everything we build dynamically (probably missing .cpps from .idl)
 clean:
-	 rm -f pingstreamclient pingstreamserver idldeclarationtst idl_to_json simplefunctionclient simplefunctionserver *.o
+	 rm -f pingstreamclient pingstreamserver idldeclarationtst idl_to_json simplefunctionclient simplefunctionserver *.o *.json
 
 

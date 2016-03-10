@@ -15,7 +15,9 @@
 //        NEEDSWORK:
 //
 //        This test program and the parsing framework were written in some haste.
-//        There will likely be some problems especially with edge cases.
+//        Some of the functions are long, etc. 
+//
+//        Function_names are sometimesInconsistent in capitalization.
 //
 //        It's known that the parsing framework does not free dynamically
 //        allocated structures -- valgrind will report leaks.
@@ -30,6 +32,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include "c150exceptions.h"
 #include "declarations.h"
 #include "functiondeclaration.h"
@@ -37,29 +40,29 @@
 
 using namespace std;
 
-void
-processIDLFile(const char fileName[]);
+// forward function declarations
 
-const int INDENT = 4;
+void processIDLFile(const char fileName[]);
 void indent_it(int ind);
 void print_arglist_or_members(vector<Arg_or_Member_Declaration *>& members, 
 			      int indent);
+void print_type(TypeDeclaration *typep, int indent);
 void print_function(FunctionDeclaration *functionp, int indent, 
 		    bool writeCommaFunction);
 void print_type_of_type(const char * type_of_type);
 
+const int INDENT = 4;            // Amount to indent each block of JSON
+
+
 // --------------------------------------------------------------
 //
 //                       main
-//
-//          Loop through all files calling processIDLFile on each
 //
 // --------------------------------------------------------------
 
 int 
 main(int argc, char *argv[])
 {
-//    int argnum;
 
     //
     // Check argument count
@@ -73,7 +76,6 @@ main(int argc, char *argv[])
     //  Process the named file
     //
 
-
     try {
 	    processIDLFile(argv[1]);
     } 
@@ -86,14 +88,15 @@ main(int argc, char *argv[])
 	    //
 	    fprintf(stderr,"%s: caught C150Exception: %s\n", argv[0],  
 		    e.formattedExplanation().c_str());
-	    printf("...Giving up on file %s...",argv[1]);
+	    fprintf(stderr, "...Giving up on file %s...\n",argv[1]);
+	    exit(EXIT_FAILURE);
     }
-    
 
     return 0;
 }
 
 // -----------------------------------------------------
+//
 //                  processIDLFile
 //
 //  Use the IDLTokenizer class to tokenize one file.
@@ -104,16 +107,9 @@ main(int argc, char *argv[])
 void
 processIDLFile(const char fileName[]) {
 
-//  unsigned int argnum;
-  int indent = 0;
-
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  //         Print outer { for whole JSON file
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-  printf("{\n");
-  indent += INDENT;
+  int indent = 0;                  // Current JSON indent amount
+  bool writeCommaType = false;     // control comma in a,b,c type lists
+  bool writeCommaFunction = false; // control comma in a,b,c function lists
 
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -136,27 +132,45 @@ processIDLFile(const char fileName[]) {
   Declarations parseTree(idlFile);
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  //         Print outer { for whole JSON file
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  printf("{\n");
+  indent += INDENT;
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   //         Print out all Types
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  //
+  //  print "types" : {
+  //
+  indent_it(indent);
+  indent += INDENT;
+  printf("\"types\" : {");               // start types json key
 
   // This iterator will return pairs of <string, TypeDeclaration*>
   // If this doesn't make sense, look on the Web for information
   // about iterating over C++ maps. 
 
+  // Note to those learning about the Declarations parse tree.  
+  //
+  // For your convenience, the C++ [] operator is overloaded so
+  // you could also reference a particular type with
+  //
+  //      parseTree.types["yourtypename"]
+  //
+  //  First, you should see whether the type exists by calling: 
+  //
+  //      parseTree.typeExists["yourtypename"]
+  //
+  //  Below, instead, we just iterate through all types
+
   std::map<std::string, TypeDeclaration*>::iterator iter;  
   TypeDeclaration *typep;
 
   //
-  //  Opening { and indent
-  //
-  indent_it(indent);
-  indent += INDENT;
-  printf("\"types\" : {");               // start types json key
-  bool writeCommaType = false;
-  bool writeCommaFunction = false;
-
-  //
-  //  Loop printing each type
+  //  Loop printing JSON for each type
   //
   for (iter = parseTree.types.begin(); iter != parseTree.types.end(); ++iter) {
 
@@ -165,21 +179,126 @@ processIDLFile(const char fileName[]) {
     // second (the value) from the map. Our keys are the type
     // names, and the values are the actual type declaration structures.
     //
-    // iter -> second gets you the value, so that's what we want
+    // iter -> second gets you the type decl, 
     //
-    // We can actually get the type name from two places:
-    // From the map at iter -> first, or from the TypeDeclaration
-    // itself by doing typep->getName()  
+    // [ By the way, We can actually get the type name from two places:
+    // 1) From the map at iter -> first, or 2)from the TypeDeclaration
+    // itself by doing typep->getName() ]
     // 
-    typep = iter -> second;
 
+    typep = iter -> second;             // ptr to type declaration
 
     printf("%s\n", 
-	   writeCommaType ? "," : "");  // write the output
-    writeCommaType = true;
-    indent_it(indent);
+	   writeCommaType ? "," : "");  // prefix with comma if needed + \n
+    writeCommaType = true;              // ...next time we WILL need a comma
+    print_type(typep, indent);          // write all the JSON for this type
+
+  }                                     // end loop through all types 
+
+
+  //
+  //  Write }, to close dict for all types
+  //
+
+  putchar('\n');
+  indent -= INDENT;
+  indent_it(indent);
+  printf("},\n");
+
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  //         Print out all Functions
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  //
+  //  print "functions" : {
+  //
+  indent_it(indent);
+  indent += INDENT;
+  printf("\"functions\" : {");               // start types json key
+
+  // This iterator will return pairs of <string, FunctionDeclaration*>
+  std::map<std::string, FunctionDeclaration*>::iterator fiter;  
+
+  // Note to those learning about the Declarations parse tree.  
+  //
+  // For your convenience, the C++ [] operator is overloaded so
+  // you could also reference a particular type with
+  //
+  //      parseTree.types["yourtypename"]
+  //
+  //  First, you should see whether the type exists by calling: 
+  //
+  //      parseTree.typeExists["yourtypename"]
+  //
+  //  Below, instead, we just iterate through all types
+
+
+  //
+  //  Loop once for each function declaration
+  //
+
+  FunctionDeclaration *functionp;    // Declare FunctionDelcaration pointer
+  for (fiter = parseTree.functions.begin(); fiter != parseTree.functions.end(); 
+       ++fiter) {
+
+    //
+    // fiter actually is a pair, with members first (the key) and
+    // second (the value) from the map. Our keys are the function
+    // names, and the values are the actual function declaration structures.
+    // 
+    functionp = fiter -> second;
+    print_function(functionp, indent, writeCommaFunction);
+    writeCommaFunction = true;
+  }
+
+  //
+  //  Write } to close dict for all functions
+  //
+
+  putchar('\n');
+  indent -= INDENT;
+  indent_it(indent);
+  printf("}\n");
+
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  //         Print outer } for whole JSON file
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  indent -= INDENT;
+  indent_it(indent);
+  printf("}\n");
+    
+} 
+
+
+// ----------------------------------------------------------
+//
+//                   print_type
+//
+//     Prints the JSON for a type declaration 
+//
+// ----------------------------------------------------------
+
+void print_type(TypeDeclaration *typep, int indent)
+{
+
+    //
+    //  "typename" : {
+    //
+
+    indent_it(indent);                  
     printf("\"%s\" : ", 
-	   typep -> getName().c_str());  // write the output
+	   typep -> getName().c_str()); // write name of type
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //    Put out JSON for struct, array or builtin as appropriate
+    //
+    //    Note that even though the { was written above, the }
+    //    is handled separately for each case. Reason: builtins
+    //    are all on one line but structs and arrays have
+    //    } on its own line.
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     //
     // It's a struct
@@ -244,6 +363,9 @@ processIDLFile(const char fileName[]) {
 	    indent_it(indent);
 	    putchar('}');
 
+    //
+    // Neither struct nor array: must be a built-in type
+    //
     } else {
 	    //
 	    // Builtin type
@@ -253,78 +375,7 @@ processIDLFile(const char fileName[]) {
 	    putchar('}');
     }
 
-  } 
-
-  //
-  //  Write }, to close dict for all types
-  //
-
-  putchar('\n');
-  indent -= INDENT;
-  indent_it(indent);
-  printf("},\n");
-
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  //         Print out all Functions
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-  //
-  //  Loop once for each function declaration
-  //
-
-  // This iterator will return pairs of <string, FunctionDeclaration*>
-  std::map<std::string, FunctionDeclaration*>::iterator fiter;  
-
-  FunctionDeclaration *functionp;    // Declare FunctionDelcaration pointer
-
-  //
-  //  Opening { and indent
-  //
-  indent_it(indent);
-  indent += INDENT;
-  printf("\"functions\" : {");               // start types json key
-
-  //  ArgumentVector args;               // We'll hold a copy of the parameter
-                                     // list here
-
-  for (fiter = parseTree.functions.begin(); fiter != parseTree.functions.end(); 
-       ++fiter) {
-
-    //
-    // Fiter actually is a pair, with members first (the key) and
-    // second (the value) from the map. Our keys are the function
-    // names, and the values are the actual function declaration structures.
-    // 
-    functionp = fiter -> second;
-    print_function(functionp, indent, writeCommaFunction);
-    writeCommaFunction = true;
-  }
-
-  //
-  //  Write } to close dict for all functions
-  //
-
-  putchar('\n');
-  indent -= INDENT;
-  indent_it(indent);
-  printf("}\n");
-
-
-
-
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  //         Print outer } for whole JSON file
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  indent -= INDENT;
-  indent_it(indent);
-  printf("}\n");
-    
-} 
-
-
-
+}
 
 // ----------------------------------------------------------
 //
@@ -343,7 +394,6 @@ void print_function(FunctionDeclaration *functionp, int indent,
     //
     printf("%s\n", 
 	   writeCommaFunction ? "," : "");  // write the output
-    writeCommaFunction = true;
     indent_it(indent);
     printf("\"%s\" : {\n", 
 	   functionp -> getName().c_str());  // write the output
@@ -353,7 +403,8 @@ void print_function(FunctionDeclaration *functionp, int indent,
     //  "return_type" : "type_name",
     //
     indent_it(indent);
-    printf("\"return_type\" : \"%s\",\n", functionp->getReturnType()->getName().c_str());
+    printf("\"return_type\" : \"%s\",\n", 
+	   functionp->getReturnType()->getName().c_str());
 
     //
     //  "arguments" " : {
@@ -362,21 +413,19 @@ void print_function(FunctionDeclaration *functionp, int indent,
     printf("\"arguments\" : ");
 
     //
+
+    //
+    // print JSON for function arguments
+    //
+
     // Get a C++ reference to the vector with the argument list
-    //
     ArgumentVector& args = functionp -> getArgumentVector();
-
-
-    //
-    // print members of struct
-    //
     print_arglist_or_members(args, indent);
-    putchar('\n');
 
+    putchar('\n');
     indent -= INDENT;
     indent_it(indent);
     putchar('}');
-
 }
 
 // ----------------------------------------------------------
@@ -431,7 +480,7 @@ void print_arglist_or_members(vector<Arg_or_Member_Declaration *>& members, int 
 
 // ----------------------------------------------------------
 //
-//                   void print_type_of_type
+//                   print_type_of_type
 //
 //     Write "type_of_type" : "ARG"
 //
