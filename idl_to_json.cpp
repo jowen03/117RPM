@@ -231,13 +231,13 @@ processIDLFile(const char fileName[]) {
   // Note to those learning about the Declarations parse tree.  
   //
   // For your convenience, the C++ [] operator is overloaded so
-  // you could also reference a particular type with
+  // you could also reference a particular function with
   //
-  //      parseTree.types["yourtypename"]
+  //      parseTree.functions["yourfunctionname"]
   //
-  //  First, you should see whether the type exists by calling: 
+  //  First, you should see whether the function exists by calling: 
   //
-  //      parseTree.typeExists["yourtypename"]
+  //      parseTree.functionExists["yourfunctionname"]
   //
   //  Below, instead, we just iterate through all types
 
