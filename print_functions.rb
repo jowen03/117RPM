@@ -9,7 +9,7 @@ require 'json'
 #     Make sure invoked properly
 #
 
-abort "Usage: #{$PROGRAM_NAME} xxx.idl" if ARGV.length != 1
+abort "Usage: #{$PROGRAM_NAME} <idlfilename>" if ARGV.length != 1
 
 
 #
