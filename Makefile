@@ -117,12 +117,12 @@ rpcgenerate: Makefile rpcgenerate.o $(C150AR) $(C150IDSRPCAR) $(INCLUDES)
 ########################################################################
 
 # Compile / link any client executable: 
-%client: %.o %.proxy.o rpcserver.o rpcproxyhelper.o %client.o %.proxy.o
-	$(CPP) -o $@ $@.o rpcproxyhelper.o $*.proxy.o  $(C150AR) $(C150IDSRPCAR) 
+#%client: %.o %.proxy.o rpcserver.o rpcproxyhelper.o %client.o %.proxy.o
+#	$(CPP) -o $@ $@.o rpcproxyhelper.o $*.proxy.o  $(C150AR) $(C150IDSRPCAR) 
 
 # Compile / link any server executable:
-%server: %.o %.stub.o rpcserver.o rpcstubhelper.o %.stub.o
-	$(CPP) -o $@ rpcserver.o $*.stub.o $*.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
+#%server: %.o %.stub.o rpcserver.o rpcstubhelper.o %.stub.o
+#	$(CPP) -o $@ rpcserver.o $*.stub.o $*.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
 
 
 
