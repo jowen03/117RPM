@@ -61,6 +61,9 @@ pingstreamserver: pingstreamserver.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 #
 #          Sample RPC client and server applications
 #
+#     THESE RULES ARE TO BE USED UNTIL RPCGENERATE IS AVAILABLE
+#     AFTER THAT, COMMENT THEM
+#
 #     Demonstrating remote calls to functions as declared in simplefunctions.idl
 #
 #     The proxies and stubs used here are hand generated, but eventually
@@ -78,6 +81,49 @@ simplefunctionclient: simplefunctionclient.o rpcproxyhelper.o simplefunction.pro
 # simplefunction.stub.o)
 simplefunctionserver: simplefunction.stub.o rpcserver.o rpcstubhelper.o simplefunction.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 	$(CPP) -o simplefunctionserver rpcserver.o simplefunction.stub.o simplefunction.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
+
+
+########################################################################
+#
+#          Compile the rpcgenerate program
+#
+#    COMMENT THIS RULE IF YOU ARE USING PYTHON OR RUBY TO
+#    IMPLEMENT YOUR rpcgenerate program.
+#
+########################################################################
+
+# Compile the rpcgenerate program
+rpcgenerate: Makefile rpcgenerate.o $(C150AR) $(C150IDSRPCAR) $(INCLUDES)
+	$(CPP) -o rpcgenerate rpcgenerate.o $(C150AR) $(C150IDSRPCAR)
+
+########################################################################
+#
+#          General rules for building any client and server
+#
+#     Given any xxx.idl, these rules will build xxxclient and xxxserver
+#
+#     THESE RULES ARE SUPPLIED COMMENTED BECAUSE THEY WILL BREAK
+#     IF USED BEFORE rpcgenerate IS AVAILABLE.
+#
+#     WHEN YOUR RPCGENERATE IS WORKING, DO THE FOLLOWING
+#
+#       1) Uncomment the rules below
+#
+#       2) Add to each of the dependency lists and the g++ invocations
+#          any .o files that you need to link into clients and servers
+#          respectively.
+#
+#
+########################################################################
+
+# Compile / link any client executable: 
+%client: %.o %.proxy.o rpcserver.o rpcproxyhelper.o %client.o %.proxy.o
+	$(CPP) -o $@ $@.o rpcproxyhelper.o $*.proxy.o  $(C150AR) $(C150IDSRPCAR) 
+
+# Compile / link any server executable:
+%server: %.o %.stub.o rpcserver.o rpcstubhelper.o %.stub.o
+	$(CPP) -o $@ rpcserver.o $*.stub.o $*.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
+
 
 
 ########################################################################
