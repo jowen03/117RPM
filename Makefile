@@ -1,4 +1,4 @@
-# Makefile for COMP 150IDS RPC Samples
+# Makefile for COMP 117 RPC Samples
 #
 #    Copyright 2012 - Noah Mendelsohn
 #
@@ -23,13 +23,13 @@ CPP = g++
 RPCGEN = ./rpcgenerate
 
 # Where the COMP 150 shared utilities live, including c150ids.a and userports.csv
-# Note that environment variable COMP150IDS must be set for this to work!
+# Note that environment variable COMP117 must be set for this to work!
 
-C150LIB = $(COMP150IDS)/files/c150Utils/
+C150LIB = $(COMP117)/files/c150Utils/
 C150AR = $(C150LIB)c150ids.a
 
 # RPC framework is shared archive
-C150IDSRPC = $(COMP150IDS)/files/RPC.framework/
+C150IDSRPC = $(COMP117)/files/RPC.framework/
 C150IDSRPCAR = $(C150IDSRPC)c150idsrpc.a
 
 CPPFLAGS = -g -Wall -Werror -I$(C150IDSRPC) -I$(C150LIB)
