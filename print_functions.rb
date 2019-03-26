@@ -2,8 +2,13 @@
 #
 #          print signatures of all the functions named in supplied IDL file
 #
+#          This version does somewhat more error checking than the one
+#          in the assignment handout, but is otherwise similar.
+#
 
 require 'json'
+
+IDL_TO_JSON_EXECUTABLE = './idl_to_json'
 
 #
 #     Make sure invoked properly
@@ -22,6 +27,9 @@ abort "#{$PROGRAM_NAME}: #{filename} not readable" if not File.readable? filenam
 #
 #     Parse declarations into Ruby hash
 #
+if !File.executable?(IDL_TO_JSON_EXECUTABLE)
+  abort "#{IDL_TO_JSON_EXECUTABLE} does not exist or is not executable..."
+end
 json_string =`idl_to_json #{filename}`
 abort "#{$PROGRAM_NAME}: Failed to parse IDL file #{filename}" if $? != 0
 decls =  JSON.parse(json_string)
