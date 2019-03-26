@@ -29,7 +29,7 @@ try:
         raise "File " + filename + " not readable"
 
     #
-    #     Make sure idl_to_json exists and is readable
+    #     Make sure idl_to_json exists and is executable
     #
     if (not os.path.isfile(IDL_TO_JSON_EXECUTABLE)):
         print >> sys.stderr,                                       \
