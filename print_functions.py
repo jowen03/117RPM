@@ -30,8 +30,6 @@ try:
 
     #
     #     Make sure idl_to_json exists and is readable
-    #     (for brevity, this code was not included in the version
-    #     published with the RPC assignment instructions.)
     #
     if (not os.path.isfile(IDL_TO_JSON_EXECUTABLE)):
         print >> sys.stderr,                                       \
