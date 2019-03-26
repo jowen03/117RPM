@@ -2,9 +2,6 @@
 #
 #          print signatures of all the functions named in supplied IDL file
 #
-#          This version does somewhat more error checking than the one
-#          in the assignment handout, but is otherwise similar.
-#
 
 import subprocess
 import json
