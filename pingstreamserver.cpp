@@ -194,7 +194,7 @@ main(int argc, char *argv[])
        }
      }
 
-     catch (C150NetworkException e) {
+     catch (C150NetworkException& e) {
        // Write to debug log
        c150debug->printf(C150ALWAYSLOG,"Caught C150NetworkException: %s\n",
 			 e.formattedExplanation().c_str());

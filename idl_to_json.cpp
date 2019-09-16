@@ -88,7 +88,7 @@ main(int argc, char *argv[])
 	    processIDLFile(argv[1]);
     } 
 
-    catch (C150Exception e) {
+    catch (C150Exception& e) {
 	    //
 	    // If any of the exceptions that are created using the COMP 150
 	    // framework are thrown, they come with a detailed explanation.
