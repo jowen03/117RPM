@@ -144,6 +144,9 @@ main(int argc, char *argv[]) {
        cerr << argv[0] << ": caught C150NetworkException: " << e.formattedExplanation() << endl;
      }
 
+     // Note that Linux will cleanly close the socket upon exit
+     // as long as there is no unread data on the connection.
+
      return 0;
 }
 
