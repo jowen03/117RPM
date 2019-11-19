@@ -16,6 +16,11 @@
 #    all         - (default target) make sure everything's compiled
 #
 
+# Once the rules that call rpcgenerate are uncommented, this will keep 
+# make from deleting *.proxy.cpp and *.stub.cpp that are generated as intermediates
+# on the way to building .o files
+.PRECIOUS: %.proxy.cpp %.stub.cpp
+
 # Do all C++ compies with g++
 CPP = g++
 
