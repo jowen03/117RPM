@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python2
 #
 #          print signatures of all the functions named in supplied IDL file
 #
