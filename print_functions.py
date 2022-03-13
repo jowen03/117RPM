@@ -39,7 +39,7 @@ try:
     #
     for  name, sig in decls["functions"].items():
 
-        # Python Array of all args (each is a hash with keys "name" and "type")
+        # Python Array of all args (each is a dictionary with keys "name" and "type")
         args = sig["arguments"]
 
         # Make a string of form:  "type1 arg1, type2 arg2" for use in function sig
