@@ -8,8 +8,8 @@
 #
 #    pingstreamclient  - demonstration message ping client using TCP streams
 #    pingstreamserver  - demonstration message ping server
-#    arithmeticclient - sample RPC client
-#    arithmeticserver - sample RPC server
+#    simplefunctionclient - sample RPC client
+#    simplefunctionserver - sample RPC server
 #    idldeclarationtst      - demonstrates the IDL parsing framework
 #
 #    clean       - clean out all compiled object and executable files
@@ -42,9 +42,9 @@ CPPFLAGS = -g -Wall -Werror -I$(C150IDSRPC) -I$(C150LIB)
 
 
 LDFLAGS = 
-INCLUDES = $(C150LIB)c150streamsocket.h $(C150LIB)c150network.h $(C150LIB)c150exceptions.h $(C150LIB)c150debug.h $(C150LIB)c150utility.h $(C150LIB)c150grading.h $(C150IDSRPC)IDLToken.h $(C150IDSRPC)tokenizeddeclarations.h  $(C150IDSRPC)tokenizeddeclaration.h $(C150IDSRPC)declarations.h $(C150IDSRPC)declaration.h $(C150IDSRPC)functiondeclaration.h $(C150IDSRPC)typedeclaration.h $(C150IDSRPC)arg_or_member_declaration.h rpcproxyhelper.h rpcstubhelper.h arithmetic.idl arithmetic.idl floatarithmetic.idl 
+INCLUDES = $(C150LIB)c150streamsocket.h $(C150LIB)c150network.h $(C150LIB)c150exceptions.h $(C150LIB)c150debug.h $(C150LIB)c150utility.h $(C150LIB)c150grading.h $(C150IDSRPC)IDLToken.h $(C150IDSRPC)tokenizeddeclarations.h  $(C150IDSRPC)tokenizeddeclaration.h $(C150IDSRPC)declarations.h $(C150IDSRPC)declaration.h $(C150IDSRPC)functiondeclaration.h $(C150IDSRPC)typedeclaration.h $(C150IDSRPC)arg_or_member_declaration.h rpcproxyhelper.h rpcstubhelper.h simplefunction.idl arithmetic.idl floatarithmetic.idl 
 
-all: pingstreamclient pingstreamserver idldeclarationtst arithmeticclient arithmeticserver idl_to_json
+all: pingstreamclient pingstreamserver idldeclarationtst simplefunctionclient simplefunctionserver idl_to_json
 
 ########################################################################
 #
@@ -69,7 +69,7 @@ pingstreamserver: pingstreamserver.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 #     THESE RULES ARE TO BE USED UNTIL RPCGENERATE IS AVAILABLE
 #     AFTER THAT, COMMENT THEM
 #
-#     Demonstrating remote calls to functions as declared in arithmetics.idl
+#     Demonstrating remote calls to functions as declared in simplefunctions.idl
 #
 #     The proxies and stubs used here are hand generated, but eventually
 #     your rpcgenerate program will (should) generate them automatically
@@ -77,15 +77,15 @@ pingstreamserver: pingstreamserver.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 #
 ########################################################################
 
-arithmeticclient: arithmeticclient.o rpcproxyhelper.o arithmetic.proxy.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
-	$(CPP) -o arithmeticclient arithmeticclient.o rpcproxyhelper.o arithmetic.proxy.o  $(C150AR) $(C150IDSRPCAR) 
+simplefunctionclient: simplefunctionclient.o rpcproxyhelper.o simplefunction.proxy.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
+	$(CPP) -o simplefunctionclient simplefunctionclient.o rpcproxyhelper.o simplefunction.proxy.o  $(C150AR) $(C150IDSRPCAR) 
 
 # The following is NOT a mistake. The main program for any of the rpc servers
 # is rpcserver.o.  This way, we can make a different one for each set 
 # of functions, by linking the right specific stugs (in this case
-# arithmetic.stub.o)
-arithmeticserver: arithmetic.stub.o rpcserver.o rpcstubhelper.o arithmetic.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
-	$(CPP) -o arithmeticserver rpcserver.o arithmetic.stub.o arithmetic.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
+# simplefunction.stub.o)
+simplefunctionserver: simplefunction.stub.o rpcserver.o rpcstubhelper.o simplefunction.o  $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
+	$(CPP) -o simplefunctionserver rpcserver.o simplefunction.stub.o simplefunction.o rpcstubhelper.o $(C150AR) $(C150IDSRPCAR) 
 
 
 ########################################################################
@@ -145,8 +145,8 @@ rpcgenerate: Makefile rpcgenerate.o $(C150AR) $(C150IDSRPCAR) $(INCLUDES)
 #     from any idl
 #
 #     WARNING! this may cause your rpcgenerate program to attempt to
-#     rebuild supplied samples like arithmetic.proxy.cpp and 
-#     arithmetic.stub.cpp. You may want to save backups for comparison.
+#     rebuild supplied samples like simplefunction.proxy.cpp and 
+#     simplefunction.stub.cpp. You may want to save backups for comparison.
 #
 ########################################################################
 
@@ -220,6 +220,6 @@ idl_to_json: idl_to_json.o $(C150AR) $(C150IDSRPCAR)  $(INCLUDES)
 
 # clean up everything we build dynamically (probably missing .cpps from .idl)
 clean:
-	 rm -f pingstreamclient pingstreamserver idldeclarationtst idl_to_json arithmeticclient arithmeticserver *.o *.json *.pyc
+	 rm -f pingstreamclient pingstreamserver idldeclarationtst idl_to_json simplefunctionclient simplefunctionserver *.o *.json *.pyc
 
 

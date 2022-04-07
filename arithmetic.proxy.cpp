@@ -24,11 +24,13 @@ int add(int x, int y) {
     //
     // Send the Remote Call
     //
-    string func = "add" + " " + to_string(x) + " " + to_string(y);
+    string func = string("add") + " " + to_string(x) + " " + to_string(y);
+    // NEEDSWORK: waste of space to send two strings but its more readable
+    char* func_c_str = const_cast<char*>(func.c_str());
         
 
     c150debug->printf(C150RPCDEBUG,"arithmetic.proxy.cpp: add() invoked");
-    RPCPROXYSOCKET->write(func.c_str(), strlen(func)+1); // write function name including null
+    RPCPROXYSOCKET->write(func_c_str, strlen(func_c_str)); // write function name including null
 
     /*
      * Read the response
@@ -40,7 +42,7 @@ int add(int x, int y) {
      * Check the response
      */
     string response, num;
-    stringstream ss << readBuffer;
+    stringstream ss(string(readBuffer));
     ss >> response;
     ss >> num;
 
