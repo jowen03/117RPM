@@ -1,0 +1,7 @@
+Flow of Items
+- Client -> proxy -> server (generic) -> stub -> remote function call
+
+Submission
+- For first submission, manually generate proxy and stub for arithmetic and floatarith
+- In future, given IDL file and function file, auto generate proxy and stub
+    - Need to use IDL to JSON
