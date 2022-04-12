@@ -215,6 +215,7 @@ void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
   readnull = false;
   bufp = buffer;
   for (i=0; i< bufSize; i++) {
+    cout << "Here" << endl;
     readlen = RPCSTUBSOCKET-> read(bufp, 1);  // read a byte
     // check for eof or error
     if (readlen == 0) {

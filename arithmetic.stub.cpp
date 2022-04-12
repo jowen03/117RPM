@@ -5,28 +5,69 @@
 #include <cstdio>
 #include <cstring>
 #include "c150debug.h"
+#include <sstream>
+#include <string>
+#include <iostream>
 
 using namespace C150NETWORK;  // for all the comp150 utilities 
 
-void getFunctionNamefromStream();
+using namespace std;
+
+void getFunctionNameFromStream(char *buffer, unsigned int bufSize);
+void __badFunction(char * functionName);
 
 void __add(int x, int y) {
     //
     // Time to actually call the function 
     //
     c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: invoking add()");
-    int sum = add(x, y)
+    int sum = add(x, y);
     string doneBuffer = "DONE " + to_string(sum);
 
     c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: returned from add() -- responding to client");
     RPCSTUBSOCKET->write(doneBuffer.c_str(), strlen(doneBuffer.c_str()));
 }
 
+void __subtract(int x, int y) {
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: invoking subtract()");
+    int diff = subtract(x, y);
+    string doneBuffer = "DONE " + to_string(diff);
+
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: returned from subtract() -- responding to client");
+    RPCSTUBSOCKET->write(doneBuffer.c_str(), strlen(doneBuffer.c_str()));
+}
+
+void __multiply(int x, int y) {
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: invoking multiply()");
+    int product = multiply(x, y);
+    string doneBuffer = "DONE " + to_string(product);
+
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: returned from multiply() -- responding to client");
+    RPCSTUBSOCKET->write(doneBuffer.c_str(), strlen(doneBuffer.c_str()));
+}
+
+void __divide(int x, int y) {
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: invoking divide()");
+    int quotient = divide(x, y);
+    string doneBuffer = "DONE " + to_string(quotient);
+
+    c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: returned from divide() -- responding to client");
+    RPCSTUBSOCKET->write(doneBuffer.c_str(), strlen(doneBuffer.c_str()));
+}
+
+void __badFunction(char * functionName) {
+  char doneBuffer[4] = "BAD";
+
+  c150debug->printf(C150RPCDEBUG,"arithmetic.stub.cpp: received call for nonexistent function %s()",functionName);
+  RPCSTUBSOCKET->write(doneBuffer, strlen(doneBuffer)+1);
+}
+
 
 void dispatchFunction() {
+  cout << "In dispatch" << endl;
 
 
-  char functionNameBuffer[80];
+  char functionNameBuffer[20];
 
   //
   // Read the function name from the stream -- note
@@ -35,12 +76,16 @@ void dispatchFunction() {
   //
   getFunctionNameFromStream(functionNameBuffer,sizeof(functionNameBuffer));
 
+  cout << "got function name" << endl;
+
   //
   // We've read the function name, call the stub for the right one
   // The stub will invoke the function and send response.
   //
-  stringstream ss(string(functionNameBuffer));
-  string func_name, arg1, arg2;
+  string s(functionNameBuffer);
+  stringstream ss(s);
+  
+  string func_name, arg1_str, arg2_str;
 
   ss >> func_name;
   ss >> arg1_str;
@@ -49,15 +94,18 @@ void dispatchFunction() {
   int arg1 = stoi(arg1_str);
   int arg2 = stoi(arg2_str);
 
+  const char* func_name_cstr = func_name.c_str();
+
+  cout << "FUNCTION INCOMING " << func_name << endl;
 
   if (!RPCSTUBSOCKET-> eof()) {
-    if (strcmp(func_name,"add") == 0)
+    if (strcmp(func_name_cstr,"add") == 0)
       __add(arg1, arg2);
-    else   if (strcmp(func_name,"subtract") == 0)
+    else   if (strcmp(func_name_cstr,"subtract") == 0)
       __subtract(arg1, arg2);
-    else   if (strcmp(func_name,"multiply") == 0)
+    else   if (strcmp(func_name_cstr,"multiply") == 0)
       __multiply(arg1, arg2);
-    else   if (strcmp(func_name,"divide") == 0)
+    else   if (strcmp(func_name_cstr,"divide") == 0)
       __divide(arg1, arg2);
     else
       __badFunction(functionNameBuffer);
@@ -75,6 +123,7 @@ void dispatchFunction() {
 //   when eof is read from client.
 //
 void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
+  cout << "getFunctionNameFromStream called " << " bufsize " << bufSize << endl;
   unsigned int i;
   char *bufp;    // next char to read
   bool readnull;
@@ -88,16 +137,21 @@ void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
   bufp = buffer;
   for (i=0; i< bufSize; i++) {
     readlen = RPCSTUBSOCKET-> read(bufp, 1);  // read a byte
+    cout << bufp << endl;
     // check for eof or error
     if (readlen == 0) {
+      cout << "HERE BREAK 1" << endl;
       break;
     }
     // check for null and bump buffer pointer
     if (*bufp++ == '\0') {
+      cout << "HERE BREAK 2" << endl;
       readnull = true;
       break;
     }
   }
+
+  cout << "bufp" << bufp << endl;
   
   //
   // With TCP streams, we should never get a 0 length read
