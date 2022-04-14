@@ -1,3 +1,6 @@
+#include <string>
+using namespace std;
+
 #include "structs.idl"
 
 #include "rpcstubhelper.h"
@@ -6,12 +9,10 @@
 #include <cstring>
 #include "c150debug.h"
 #include <sstream>
-#include <string>
 #include <iostream>
 
 using namespace C150NETWORK;  // for all the comp150 utilities 
 
-using namespace std;
 
 void getFunctionNameFromStream(char *buffer, unsigned int bufSize);
 void __badFunction(char * functionName);
@@ -62,9 +63,9 @@ void dispatchFunction() {
             ss >> p3fn;
             ss >> p3ln;
             ss >> p3a;
-            Person p1 = {p1fn, p1ln, atoi(p1a)};
-            Person p2 = {p2fn, p2ln, atoi(p2a)};
-            Person p3 = {p3fn, p3ln, atoi(p3a)};
+            Person p1 = {p1fn, p1ln, stoi(p1a)};
+            Person p2 = {p2fn, p2ln, stoi(p2a)};
+            Person p3 = {p3fn, p3ln, stoi(p3a)};
             ThreePeople tp = {p1, p2, p3};
             __findPerson(tp);
         }
@@ -72,7 +73,7 @@ void dispatchFunction() {
             string x, y;
             ss >> x;
             ss >> y;
-            rectangle r = {atoi(x), atoi(y)};
+            rectangle r = {stoi(x), stoi(y)};
             __area(r);
         }
         else
@@ -92,7 +93,6 @@ void dispatchFunction() {
 //   when eof is read from client.
 //
 void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
-  cout << "getFunctionNameFromStream called " << " bufsize " << bufSize << endl;
   unsigned int i;
   char *bufp;    // next char to read
   bool readnull;
@@ -106,21 +106,17 @@ void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
   bufp = buffer;
   for (i=0; i< bufSize; i++) {
     readlen = RPCSTUBSOCKET-> read(bufp, 1);  // read a byte
-    cout << bufp << endl;
     // check for eof or error
     if (readlen == 0) {
-      cout << "HERE BREAK 1" << endl;
       break;
     }
     // check for null and bump buffer pointer
     if (*bufp++ == '\0') {
-      cout << "HERE BREAK 2" << endl;
       readnull = true;
       break;
     }
   }
 
-  cout << "bufp" << bufp << endl;
   
   //
   // With TCP streams, we should never get a 0 length read

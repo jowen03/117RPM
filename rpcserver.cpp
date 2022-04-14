@@ -116,7 +116,6 @@ main(int argc, char *argv[]) {
 	   // work of reading and writing the stream, but will return on eof,
 	   // which we'll get when client goes away.
 	   //
-     cout << "HERE" << endl;
 	   dispatchFunction();     // call the subs function dispatcher
   
 	   if (RPCSTUBSOCKET -> eof()) {

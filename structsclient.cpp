@@ -36,6 +36,9 @@
 // --------------------------------------------------------------
 
 
+#include <string>
+using namespace std;
+
 #include "structs.idl"
 
 #include "rpcproxyhelper.h"
@@ -44,7 +47,6 @@
 #include "c150grading.h"
 #include <fstream>
 
-using namespace std;          // for C++ std library
 using namespace C150NETWORK;  // for all the comp150 utilities 
 
 // forward declarations
@@ -100,7 +102,7 @@ main(int argc, char *argv[]) {
        Person p2 = {"Sam", "Testa", 22};
        Person p3 = {"John", "Cena", 40};
        ThreePeople tp = {p1, p2, p3};
-       Rectangle r1 = {5, 4};        
+       rectangle r1 = {5, 4};        
 
        Person findPersonResult;  
        int areaResult; 
@@ -115,7 +117,7 @@ main(int argc, char *argv[]) {
        //
        printf("Calling add(10,2)\n");
        findPersonResult = findPerson(tp);                          // remote call (we hope!)
-       printf("Returned from findPerson(tp). Result=%s\n",findPersonResult.firstname);
+       printf("Returned from findPerson(tp). Result=%s\n",findPersonResult.firstname.c_str());
 
        // 
        // Call (possibly remote) subtract

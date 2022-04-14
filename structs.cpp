@@ -1,7 +1,10 @@
+#include <string>
+using namespace std;
+
 #include "structs.idl"
 
 Person findPerson(ThreePeople tp) {
-    return tp.p3
+    return tp.p3;
 }
 
 int area(rectangle r) {
