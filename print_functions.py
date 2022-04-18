@@ -33,7 +33,8 @@ try:
     #     Parse declarations into a Python dictionary
     #
     decls = json.loads(subprocess.check_output([IDL_TO_JSON_EXECUTABLE, filename]))
-
+    print("hi")
+    print(json.dumps(decls, indent=4, sort_keys=True))
     #
     # Loop printing each function signature
     #
