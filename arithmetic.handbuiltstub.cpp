@@ -100,6 +100,7 @@ void dispatchFunction() {
 
   if (!RPCSTUBSOCKET-> eof()) {
     if (strcmp(func_name_cstr,"add") == 0)
+        
       __add(arg1, arg2);
     else   if (strcmp(func_name_cstr,"subtract") == 0)
       __subtract(arg1, arg2);
@@ -140,12 +141,10 @@ void getFunctionNameFromStream(char *buffer, unsigned int bufSize) {
     cout << bufp << endl;
     // check for eof or error
     if (readlen == 0) {
-      cout << "HERE BREAK 1" << endl;
       break;
     }
     // check for null and bump buffer pointer
     if (*bufp++ == '\0') {
-      cout << "HERE BREAK 2" << endl;
       readnull = true;
       break;
     }
