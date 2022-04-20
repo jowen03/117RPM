@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<!-- 
+ **********************************************************
+
+             TUFTS CS 117 HOMEWORK ASSIGNMENT
+
+        Fill in your name, e-mail and answers to questions
+        in the sections provided below.
+
+          All questions are marked up: <li class="q">
+          All answers are marked up:   <li class="a">
+
+
+     PLEASE DO NOT MODIFY ANY THING OTHER THAN THE 
+     NAME, E-MAIL, AND ANSWER FIELDS (you may also add
+     css declarations in the <head> if you need them,
+     but usually you won't.
+
+ **********************************************************
+ -->
+
+
+<html lang="en">
+<head>
+<meta charset="utf-8"> 
+<title>Tufts CS 117 Assignment &#8212; Remote Procedure Call Project Report</title>
+<link rel="stylesheet" type="text/css" href="https://www.cs.tufts.edu/comp/117/style/homework.css" />
+</head>
+
+<body class="homework">
+
+
+<!-- ******************************************************
+	   YOU MUST FILL IN YOUR NAME, UTLN AND EMAIL BELOW!!
+         (You may copy this from an earlier assignment
+                         if you like)
+
+     ****************************************************** -->
+
+
+<div class="student">
+<p>
+<span class="label">Student1 name: </span>
+Sam Testa
+<br>
+
+<span class="label">UTLN: </span>
+stesta03
+<br>
+
+<span class="label">E-mail: samantha.testa@tufts.edu</span>
+<!-- DON'T FORGET UP UPDATE THE MAILTO: URI BELOW ALONG WITH
+     YOUR EMAIL IN THE ANCHOR.  IT SHOULD LOOK LIKE:
+ <a href="mailto:lady.gaga@cs.tufts.edu">lady.gaga@cs.tufts.edu</a>
+--> 
+
+<a href="mailto:YOUR-EMAIL-HERE">samantha.testa@tufts.edu</a>
+<br>
+<br>
+<br>
+<span class="label">Student2 name: </span>
+Jacob Owen
+<br>
+<span class="label">UTLN: </span>
+jowen03
+<br>
+
+<span class="label">E-mail: </span>
+<!-- DON'T FORGET UP UPDATE THE MAILTO: URI BELOW ALONG WITH
+     YOUR EMAIL IN THE ANCHOR.  IT SHOULD LOOK LIKE:
+ <a href="mailto:lady.gaga@cs.tufts.edu">lady.gaga@cs.tufts.edu</a>
+--> 
+
+<a href="mailto:YOUR-EMAIL-HERE">jacob.owen@tufts.edu</a>
+
+<br>
+</p>
+</div>
+
+
+
+
+<div class="UpperLeftHeader">
+<p>Tufts CS 117 (Spring 2022):
+<br>
+Internet-scale Distributed Systems
+</p>
+</div>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - -
+		HOMEWORK TITLE
+  - -  - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<div class="headerdiv">
+<h1>
+Tufts CS 117:<br>
+RPC Project Report
+</h1>
+</div>
+
+<!-- ******************************************************
+
+              PLEASE ANSWER QUESTIONS IN THE SECTIONS
+	      LABELED class="a" (for answer)
+
+     ****************************************************** -->
+
+
+
+
+<div class="main">
+
+<h2 id="questions">Questions</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - -
+		QUESTION
+  - -  - - - - - - - - - - - - - - - - - - - - - - -->
+<div class="qa">
+
+<ol class="qa">
+<li class="q">Did you implement an rpcgenerate program and does it handle all legal IDL files? If not, which test cases should we try in your submission  directory?</li>
+<li class="a">
+We implemented an rpcgenerate program that works for simple cases: ints, floats, strings, characters. Try out our submission with arithmetic.idl and floatarithmetic.idl
+</li>
+
+<li class="q">What programming language did you use for your rpcgenerate program?</li>
+<li class="a">
+Put an X in the space next to your choice:
+<ul>
+  <li>_____ C++ (using the provided type framework)</li>
+  <li>__X__ Python (using the provided <code>idl_to_json</code>)</li>
+  <li>_____ Ruby (using the provided <code>idl_to_json</code>)</li>
+</ul>
+</li>
+
+<li class="q">Briefly explain the protocol you use over TCP to request function calls and return the results.</li>
+<li class="a">
+...your answer here...
+</li>
+
+<li class="q">Did you get help from anyone other than your teammate? If "yes", then briefly explain who helped you and how.</li>
+<li class="a">
+We got help from Noah Mendelsohn in creating a timeline to finish the project after the due date and prioritize goals.
+</li>
+
+
+<li class="q">(optional) Do you have any other comments on this assignment (e.g. was it worthwhile, what did you learn from it, do you have suggestions for improvment if the course is offered again)?</li>
+<li class="a">
+I am really grateful we took the extra time to get rpcgenerate working for simple cases. We both felt we learned a great deal about generalizability of code and it was super
+exciting to play around with that. One instance of this we spent a good deal of time thinking about was how to generalize the python builder to work for functions that
+had any number of arguments. In arithmetic.idl, all functions had two arguments. However, we chose to future-proof by generalizing our stub builder so that space for arguments
+would be dynamically allocated for each function of the idl. In doing so, the resulting code was very ugly; argument variables that were allocated inside each conditional body
+for each function of the idl. We had a conversation about the fact that we were literally programming something that would dynamically create a program, but in doing so it seems
+there's a recurring theme of sacrificing brevity / modularity. Does this matter if it's a program made for machines by machines? I think the added power of having dynamic
+numbers of functions, arguments, etc. in the idl is worth the tradeoff of redundant code. But it was interesting to think about that.
+
+Honestly, I could just be biased because we did not complete it, but I don't know if it would have added too much knowledge had we expanded this to work for more complicated cases
+such as structs or arrays. I worry it would have been more tedious than it would have added to our learning. That being said, we didn't do it, so I don't know what I don't know, lol :)
+</li>
+
+</ol>
+
+<!-- * * * * * * * * * * * * * * * * * * * * * -->
+<!--         ADDITIONAL INFORMATION            -->
+<!-- * * * * * * * * * * * * * * * * * * * * * -->
+
+<h2 id="reportbody">ADDITIONAL INFORMATION</h2>
+
+<!-- Delete the entire paragraph below 
+     and replace it with your report. (Do NOT
+     keep the color:grey styling on your report! :-) -->
+
+<p>...put any additional information here, with a brief indication that no additional explanation is needed...</p>
+
+</div>
+</div>
+</body>
+</html>
